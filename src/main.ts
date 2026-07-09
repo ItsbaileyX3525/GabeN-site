@@ -19,8 +19,7 @@ let subtitleInterval2: number | undefined
 
 let subtitleText = [
   "G", "A", "B", "E",
-  "G", "A", "B", "E", "N",
-  "GabeN"
+  "G", "A", "B", "E", "N"
 ]
 
 document.addEventListener("click", () => {
