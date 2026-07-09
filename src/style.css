@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+@font-face {
+ font-family: 'fallingsky';
+ font-display: swap;
+ src: url('/fonts/FallingSky=JKwK.otf') format('woff2');
+}
+
+@theme {
+ --font-subtitle: "fallingsky", serif;
+}
