@@ -98,8 +98,8 @@ setInterval(() => {
 document.addEventListener("DOMContentLoaded", () => {
   var bgRNG = Math.floor(Math.random()*10)+1
   if (bgRNG > 5) {
-    app.style.backgroundImage = "url('/images/gaben freeman.jpg')"
+    app.style.backgroundImage = "url('images/gaben freeman.jpg')"
   } else {
-    app.style.backgroundImage = "url('/images/Lord_Gaben.webp')"
+    app.style.backgroundImage = "url('images/Lord_Gaben.webp')"
   }
 })
