@@ -7,11 +7,12 @@
     <title>GabeN Site Love</title>
   </head>
   <body>
-    <audio id="gaben-music" src="audio/GabeN.mp3" loop></audio>
-    <audio id="gaben-music-full" src="audio/GabeN Full.mp3" loop></audio>
+    <audio id="gaben-music" src="audio/music/GabeN.mp3" loop></audio>
+    <audio id="gaben-music-full" src="audio/music/GabeN Full.mp3" loop></audio>
+    <audio id="gaben-song" src="audio/music/GabeN song.mp3" loop></audio>
     <div class="bg-no-repeat bg-[length:100%_100%] h-screen" style="background-image: url('/images/gaben freeman.jpg')" id="app">
-
-
+        <div id="gaben-face" class="hidden"><img class="size-24" src="images/gaben-face.png" alt=""></div>
+        <div id="click" class="z-100 absolute bottom-1/2 right-1/2 select-none cursor-pointer bg-yellow-300 text-black px-2 py-2 rounded-xl">press me</div>
         <div class="absolute bottom-10 w-full"><p class="text-center font-subtitle text-white text-xl font-bold" id="song-subtitles"></p></div>
     </div>
     <script type="module" src="/src/main.ts"></script>
