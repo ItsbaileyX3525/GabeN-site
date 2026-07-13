@@ -3,9 +3,16 @@
 @font-face {
  font-family: 'fallingsky';
  font-display: swap;
- src: url('/fonts/FallingSky-JKwK.otf') format('woff2');
+ src: url('/fonts/FallingSky-JKwK.otf') format('opentype');
+}
+
+@font-face {
+ font-family: 'source-console';
+ font-display: swap;
+ src: url('/fonts/lucon.ttf') format('truetype');
 }
 
 @theme {
  --font-subtitle: "fallingsky", serif;
+ --font-console: "source-console", serif;
 }
