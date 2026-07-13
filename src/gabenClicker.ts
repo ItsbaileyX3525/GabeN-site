@@ -13,6 +13,10 @@ const click1: HTMLAudioElement = new Audio("audio/clicks/gaben-no.mp3")
 const click2: HTMLAudioElement = new Audio("audio/clicks/gaben.mp3")
 const click3: HTMLAudioElement = new Audio("audio/clicks/thanks-and-have-fun-gabe-newell.mp3")
 
+export function addClicks(amount: number) {
+    gabeClicks += amount
+}
+
 clicker.addEventListener("click", () => {
   const click_rng = Math.floor(Math.random() * (3 - 1 + 1)) + 1;
   if (click_rng == 1) {
