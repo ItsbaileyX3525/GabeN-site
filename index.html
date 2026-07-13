@@ -4,16 +4,24 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GabeN Site Love</title>
-    <script type="module" crossorigin src="/GabeN-site/assets/index-DYR_MivJ.js"></script>
-    <link rel="stylesheet" crossorigin href="/GabeN-site/assets/index-clStuhhX.css">
+    <script type="module" crossorigin src="/GabeN-site/assets/index-ikfeX9-8.js"></script>
+    <link rel="stylesheet" crossorigin href="/GabeN-site/assets/index-C7-FCCvq.css">
   </head>
   <body>
     <audio id="gaben-music" src="audio/music/GabeN.mp3" loop></audio>
     <audio id="gaben-music-full" src="audio/music/GabeN Full.mp3" loop></audio>
     <audio id="gaben-song" src="audio/music/GabeN song.mp3" loop></audio>
     <div class="bg-no-repeat bg-[length:100%_100%] h-screen" style="background-image: url('/GabeN-site/images/gaben%20freeman.jpg')" id="app">
+        <div class="bg-[#888888e7] w-2/3 h-3/5 hidden rounded-2xl left-4 top-4 pr-4 pl-4 z-100 font-console" id="source-console">
+          <p class="ml-4 mt-4">Console</p>
+          <div class="w-full h-9/12 border border-[#545353] bg-[#6262628a] flex flex-col pl-3 pt-2 overflow-auto scroll-auto" id="inner-contents">
+          </div>
+          <div class="w-full mt-4">
+            <input id="console-input" class="w-full bg-[#636363] border" type="text">
+          </div>
+        </div>
         <div id="gaben-face" class="hidden"><img class="size-24" src="images/gaben-face.png" alt=""></div>
-        <div id="click" class="z-100 absolute bottom-1/2 right-1/2 select-none cursor-pointer bg-yellow-300 text-black px-2 py-2 rounded-xl">press me</div>
+        <div id="click" class="z-10 absolute bottom-1/2 right-1/2 select-none cursor-pointer bg-yellow-300 text-black px-2 py-2 rounded-xl">press me</div>
         <div class="absolute bottom-10 w-full"><p class="text-center font-subtitle text-white text-xl font-bold" id="song-subtitles"></p></div>
     </div>
   </body>
