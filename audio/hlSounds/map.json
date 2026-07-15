@@ -1,0 +1,42 @@
+[
+    {
+        "name": "access-denied_Is238Ly.mp3",
+        "path": "audio/hlSounds/access-denied_Is238Ly.mp3"
+    },
+    {
+        "name": "ah.mp3",
+        "path": "audio/hlSounds/ah.mp3"
+    },
+    {
+        "name": "button.mp3",
+        "path": "audio/hlSounds/button.mp3"
+    },
+    {
+        "name": "death.mp3",
+        "path": "audio/hlSounds/death.mp3"
+    },
+    {
+        "name": "greetings.mp3",
+        "path": "audio/hlSounds/greetings.mp3"
+    },
+    {
+        "name": "healthCharge.mp3",
+        "path": "audio/hlSounds/healthCharge.mp3"
+    },
+    {
+        "name": "medkitBeat.mp3",
+        "path": "audio/hlSounds/medkitBeat.mp3"
+    },
+    {
+        "name": "ohMy.mp3",
+        "path": "audio/hlSounds/ohMy.mp3"
+    },
+    {
+        "name": "RiseAndShine.mp3",
+        "path": "audio/hlSounds/RiseAndShine.mp3"
+    },
+    {
+        "name": "wah.mp3",
+        "path": "audio/hlSounds/wah.mp3"
+    }
+]
