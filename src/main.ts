@@ -29,12 +29,22 @@ let subtitleText = [
   "G", "A", "B", "E", "N"
 ]
 
+export function muteMusic() {
+    GabenFullMusic.pause()
+    GabenMusic.pause()
+    GabenSong.pause()
+}
+
 document.addEventListener("click", () => {
-  if (!(GabenFullMusic && GabenMusic && GabenSong)) {
+  if (!(GabenFullMusic && GabenMusic && GabenSong) || localStorage.getItem("musicMuted") === "true") {
     return
   }
 
   const rng: number = Math.floor(Math.random() * 100) + 1
+
+    GabenFullMusic.volume = .4
+    GabenMusic.volume = .4
+    GabenSong.volume = .4
 
   if (GabenFullMusic.paused && GabenMusic.paused && GabenSong.paused) {
     if (rng >= 89 && rng < 97) {
