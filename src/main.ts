@@ -8,6 +8,7 @@ const GabenFullMusic = document.getElementById("gaben-music-full") as HTMLAudioE
 const GabenSong = document.getElementById("gaben-song") as HTMLAudioElement
 const subtitles = document.getElementById("song-subtitles") as HTMLParagraphElement
 const app = document.getElementById("app") as HTMLDivElement
+const customMusic = new Audio("") as HTMLAudioElement
 
 //Timers for subtitles & other stuff related
 const GabenMusicTime: number = 2.331
@@ -29,6 +30,9 @@ let subtitleText = [
   "G", "A", "B", "E", "N"
 ]
 
+//Other vars
+let customMusicPlaying: boolean = false
+
 export function muteMusic() {
     GabenFullMusic.pause()
     GabenMusic.pause()
@@ -36,9 +40,20 @@ export function muteMusic() {
 }
 
 document.addEventListener("click", () => {
-  if (!(GabenFullMusic && GabenMusic && GabenSong) || localStorage.getItem("musicMuted") === "true") {
+  if ((localStorage.getItem("musicMuted") || "false") === "true") return
+
+  const musicURL = localStorage.getItem("musicURL") || "" /*falsy value*/
+  if (musicURL) {
+    if (customMusicPlaying) return
+    console.log("playing custom music")
+    customMusic.src =  musicURL
+    customMusic.play()
+    customMusic.loop = true
+    customMusicPlaying = true
     return
   }
+
+  if (!(GabenFullMusic && GabenMusic && GabenSong)) return
 
   const rng: number = Math.floor(Math.random() * 100) + 1
 
@@ -101,12 +116,16 @@ function doSubtitles() {
 }
 
 setInterval(() => {
-  if (doingSubtitles) {return}
-  if (GabenMusic.currentTime >= GabenMusicTime && GabenMusic.currentTime <= MaxGabenMusicTime) {
+  if (doingSubtitles) return
+  if ((localStorage.getItem("musicMuted") || "false") == "true") return
+
+  const shouldStartMusicSubtitles = GabenMusic.currentTime >= GabenMusicTime && GabenMusic.currentTime <= MaxGabenMusicTime
+  const shouldStartFullMusicSubtitles = GabenFullMusic.currentTime >= GabenMusicFullTime && GabenFullMusic.currentTime <= MaxGabenMusicFullTime
+
+  if (shouldStartMusicSubtitles) {
     doSubtitles()
     doingSubtitles = true
-  }
-  if (GabenFullMusic.currentTime >= GabenMusicFullTime && GabenFullMusic.currentTime <= MaxGabenMusicFullTime) {
+  } else if (shouldStartFullMusicSubtitles) {
     doSubtitles()
     doingSubtitles = true
   }

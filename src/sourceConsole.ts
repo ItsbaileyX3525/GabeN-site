@@ -1,16 +1,23 @@
 import { addClicks } from "./gabenClicker"
-import { muteMusic } from "./main"
 
 const srcConsole = document.getElementById("source-console") as HTMLDivElement
 const consoleInput = document.getElementById("console-input") as HTMLInputElement
 const consoleLogs = document.getElementById("inner-contents") as HTMLDivElement
+const crowbarCursor = document.getElementById("crowbar-cursor") as HTMLDivElement
+const app = document.getElementById("app") as HTMLDivElement
 
 //Audio stuff
+const GabenMusic = document.getElementById("gaben-music") as HTMLAudioElement
+const GabenFullMusic = document.getElementById("gaben-music-full") as HTMLAudioElement
+const GabenSong = document.getElementById("gaben-song") as HTMLAudioElement
 
-const barneyDroppedThis = new Audio("audio/voicelines/dropped-blackmesa.mp3")
+const barneyDroppedThis = new Audio("audio/voicelines/dropped-blackmesa2.mp3")
+const crowbarHit: HTMLAudioElement = new Audio("audio/clicks/half-life-crowbar.mp3")
 
 //cool vars
 let sv_cheats: boolean = false
+
+let validSoundPaths: string[] = []
 
 //console commands use underscore like the valve naming convention
 function _add_gabes(args: string[]): string[] {
@@ -23,9 +30,89 @@ function _add_gabes(args: string[]): string[] {
     return [`Added ${gabesToAdd} GabeNs`, "true"]
 }
 
-function _crowbar(args: string[]): string[] {
+function _goon(_args: string[]): string[] {
+    const pregoon: string = localStorage.getItem("musicMuted") || "false"
+    const videoTag = document.createElement("video")
+    videoTag.src = "images/rise and shine mr freeman.mp4"
+    videoTag.classList.add("absolute", "h-screen", "w-screen")
+    localStorage.setItem("musicMuted", "true")
+    GabenFullMusic.pause()
+    GabenMusic.pause()
+    GabenSong.pause()
+    //Tailwind doesn't eval at runtime obvs so because these aren't added to the bundle, we have to manually style these 2
+    videoTag.style.objectFit = "fill"
+    videoTag.style.zIndex = "100"
+    videoTag.play()
+    app.appendChild(videoTag)
+    setTimeout(() => {
+        videoTag.remove()
+        if (pregoon == "false") {
+            localStorage.setItem("musicMuted", "false")
+        }
+    }, 24000);
+    return ["Gooned", "true"]
+}
+
+function _soundlist(_args: string[]): string[] {
+    fetch("audio/hlSounds/map.json")
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+            for (const [key, value] of Object.entries(data)) {
+                console.log(key, value)
+                addOutputToConsole("", [], `${(value as { name?: string }).name ?? ""} at: ${(value as {path?: string}).path}`)
+            }
+        })
+    return ["", "true"]
+}
+
+function _crowbar(_args: string[]): string[] {
     barneyDroppedThis.play()
+    crowbarCursor.classList.remove("hidden")
+    crowbarCursor.classList.add("absolute")
+    document.body.style.cursor = "none"
     return ["Crowbar found and activated", "true"]
+}
+
+function _playsound(args: string[]): string[] {
+    let soundToPlay = args[0]
+    const vol = parseFloat(args[1]) || 1.0
+
+    if (!soundToPlay) return ["invalid args", "false"]
+
+    if (!soundToPlay.endsWith(".mp3")) {
+        soundToPlay += ".mp3"
+    }
+
+    const src = "audio/hlSounds/" + soundToPlay
+
+    if (!validSoundPaths.includes(src)) return ["Sound not found", "false"]
+
+    const audio = new Audio(src)
+    audio.volume = vol
+    audio.play()
+
+    setTimeout(() => {
+        audio.remove()
+    }, audio.duration * 100);
+
+    return [`Playing sound, ${soundToPlay.replace(".mp3", "")}`, "true"]
+}
+
+function _set_music(args: string[]): string[] {
+    const musicURL = args[0]
+    if (!musicURL) {
+        localStorage.removeItem("musicURL")
+        return ["Removed custom music", "true"]
+    }
+
+    if (!musicURL.endsWith(".mp3")) {
+        return ["Invalid file, mp3, im feeling file-typist today", "false"]
+    }
+
+    localStorage.setItem("musicURL", musicURL)
+
+    return ["Set custom music", "true"]
 }
 
 function _mute_music(args: string[]): string[] {
@@ -45,11 +132,13 @@ function _mute_music(args: string[]): string[] {
 
     if (value) {
         localStorage.setItem("musicMuted", "true")
-        muteMusic()
-        return ["muted", "true"]
+        GabenFullMusic.pause()
+        GabenMusic.pause()
+        GabenSong.pause()
+        return ["Muted", "true"]
     } else {
         localStorage.setItem("musicMuted", "false")
-        return ["unmuted", "true"]
+        return ["Unmuted", "true"]
     }
 }
 
@@ -73,7 +162,7 @@ function _sv_cheats(args: string[]): string[] {
 
     sv_cheats = value
     console.log(sv_cheats)
-    return ["changed value successfully", "true"]
+    return ["Changed value", "true"]
 }
 
 const functions: string[] = [
@@ -81,7 +170,10 @@ const functions: string[] = [
     "add_gabes",
     "crowbar",
     "mute_music",
-
+    "goon",
+    "play",
+    "soundlist",
+    "set_music",
 ]
 
 const commandToFunc: Record<string, CallableFunction> = {
@@ -89,6 +181,10 @@ const commandToFunc: Record<string, CallableFunction> = {
     "add_gabes" : _add_gabes,
     "crowbar" : _crowbar,
     "mute_music" : _mute_music,
+    "goon" : _goon,
+    "play" : _playsound,
+    "soundlist" : _soundlist,
+    "set_music" : _set_music,
 }
 
 function submitCommand(command: string, args: string[]): void {
@@ -146,4 +242,41 @@ consoleInput.addEventListener("keypress", (e) => {
         submitCommand(cmd, args)
         consoleInput.value = ""
     }
+})
+
+document.addEventListener("mousemove", (e) => {
+    crowbarCursor.style.left = (e.clientX - 25) + "px"
+    crowbarCursor.style.top = (e.clientY - 5) + "px"
+})
+
+document.addEventListener("mousedown", () => {
+    if (crowbarCursor.classList.contains("absolute")) {
+        let newAudio: HTMLAudioElement = new Audio(crowbarHit.src)
+        newAudio.play()
+        setTimeout(() => {
+            newAudio.remove()
+        }, newAudio.duration * 100);
+    }
+
+    crowbarCursor.style.transform =`rotate(-40deg)`
+})
+
+document.addEventListener("mouseup", () => {
+    crowbarCursor.style.transform =`rotate(0deg)`
+})
+
+document.addEventListener("DOMContentLoaded", async () => {
+    interface SoundItem {
+    name: string;
+    path: string;
+    }
+
+    const response = await fetch("audio/hlSounds/map.json");
+    const data: SoundItem[] = await response.json(); // Type the parsed JSON directly
+
+    data.forEach((element) => {
+        validSoundPaths.push(element.path)
+    });
+
+    
 })
