@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="/src/style.css" rel="stylesheet">
+    <script src="coi-serviceworker.js"></script>
     <title>GabeN Site Love</title>
   </head>
   <body>
@@ -11,7 +12,7 @@
     <audio id="gaben-music-full" src="audio/music/GabeN Full.mp3" loop></audio>
     <audio id="gaben-song" src="audio/music/GabeN song.mp3" loop></audio>
     <div class="bg-no-repeat bg-[length:100%_100%] h-screen" style="background-image: url('/images/gaben freeman.jpg')" id="app">
-      <div class="bg-[#888888e7] w-2/3 h-3/5 absolute rounded-2xl left-4 top-4 pr-4 pl-4 z-100 font-console" id="source-console">
+      <div class="bg-[#888888e7] w-2/3 h-3/5 hidden rounded-2xl left-4 top-4 pr-4 pl-4 z-100 font-console" id="source-console">
         <p class="ml-4 mt-4">Console</p>
         <div class="w-full h-9/12 border border-[#545353] bg-[#6262628a] flex flex-col pl-3 pt-2 overflow-auto scroll-auto" id="inner-contents">
         </div>
@@ -24,5 +25,6 @@
       <div class="absolute bottom-10 w-full"><p class="text-center font-subtitle text-white text-xl font-bold" id="song-subtitles"></p></div>
       <img id="crowbar-cursor" src="images/crowbar_carry.png" class="hidden pointer-events-none z-1000 w-20 select-none"/>    </div>
     <script type="module" src="/src/main.ts"></script>
+    <iframe id="literally-hl2" src="https://hl2.slqnt.dev/" allow="cross-origin-isolated" class="hidden w-screen h-screen z-100 top-0" frameborder="0"></iframe>
   </body>
 </html>

@@ -1,7 +1,7 @@
 [
     {
-        "name": "access-denied_Is238Ly.mp3",
-        "path": "audio/hlSounds/access-denied_Is238Ly.mp3"
+        "name": "accessDenied.mp3",
+        "path": "audio/hlSounds/accessDenied.mp3"
     },
     {
         "name": "ah.mp3",
@@ -12,8 +12,20 @@
         "path": "audio/hlSounds/button.mp3"
     },
     {
+        "name": "can.mp3",
+        "path": "audio/hlSounds/can.mp3"
+    },
+    {
         "name": "death.mp3",
         "path": "audio/hlSounds/death.mp3"
+    },
+    {
+        "name": "donuts.mp3",
+        "path": "audio/hlSounds/donuts.mp3"
+    },
+    {
+        "name": "dropped.mp3",
+        "path": "audio/hlSounds/dropped.mp3"
     },
     {
         "name": "greetings.mp3",

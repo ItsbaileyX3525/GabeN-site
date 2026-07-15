@@ -6,4 +6,10 @@ export default defineConfig({
     tailwindcss(),
   ],
   base: '/GabeN-site/',
+  server: {
+    headers: {
+      "Cross-Origin-Opener-Policy": "same-origin",
+      "Cross-Origin-Embedder-Policy": "require-corp",
+    },
+  },
 })

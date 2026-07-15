@@ -5,6 +5,7 @@ const consoleInput = document.getElementById("console-input") as HTMLInputElemen
 const consoleLogs = document.getElementById("inner-contents") as HTMLDivElement
 const crowbarCursor = document.getElementById("crowbar-cursor") as HTMLDivElement
 const app = document.getElementById("app") as HTMLDivElement
+const hl2 = document.getElementById("literally-hl2") as HTMLIFrameElement
 
 //Audio stuff
 const GabenMusic = document.getElementById("gaben-music") as HTMLAudioElement
@@ -99,6 +100,12 @@ function _playsound(args: string[]): string[] {
     return [`Playing sound, ${soundToPlay.replace(".mp3", "")}`, "true"]
 }
 
+function _load_hl2(_args: string[]): string[] {
+    hl2.classList.remove("hidden")
+    hl2.classList.add("absolute")
+    return ["Loaded hl2", "true"]
+}
+
 function _set_music(args: string[]): string[] {
     const musicURL = args[0]
     if (!musicURL) {
@@ -174,6 +181,7 @@ const functions: string[] = [
     "play",
     "soundlist",
     "set_music",
+    "load_hl2",
 ]
 
 const commandToFunc: Record<string, CallableFunction> = {
@@ -185,6 +193,7 @@ const commandToFunc: Record<string, CallableFunction> = {
     "play" : _playsound,
     "soundlist" : _soundlist,
     "set_music" : _set_music,
+    "load_hl2" : _load_hl2,
 }
 
 function submitCommand(command: string, args: string[]): void {
@@ -230,7 +239,12 @@ document.addEventListener("keypress", (key) => {
             srcConsole.classList.remove("absolute")
             srcConsole.classList.add("hidden")
         }
-
+    }
+    
+    if (key.key == "#") {
+        hl2.classList.add("hidden")
+        hl2.classList.remove("absolute")
+        hl2.src = hl2.src //reload the iframe
     }
 })
 
