@@ -31,6 +31,18 @@ function _add_gabes(args: string[]): string[] {
     return [`Added ${gabesToAdd} GabeNs`, "true"]
 }
 
+function _connect(args: string[]): string[] {
+    console.log("Connecting to server!")
+
+    const ip: string = args[0]
+    if (!ip) return ["Invalid args", "false"]
+    if (ip.length < 7) return ["Invalid ip", "false"] //IPs are at least 8 chars, 0.0.0.0
+
+    //do more stuff here.
+    
+    return ["Connected to server", "true"]
+}
+
 function _goon(_args: string[]): string[] {
     const pregoon: string = localStorage.getItem("musicMuted") || "false"
     const videoTag = document.createElement("video")
@@ -172,18 +184,6 @@ function _sv_cheats(args: string[]): string[] {
     return ["Changed value", "true"]
 }
 
-const functions: string[] = [
-    "sv_cheats",
-    "add_gabes",
-    "crowbar",
-    "mute_music",
-    "goon",
-    "play",
-    "soundlist",
-    "set_music",
-    "load_hl2",
-]
-
 const commandToFunc: Record<string, CallableFunction> = {
     "sv_cheats" : _sv_cheats,
     "add_gabes" : _add_gabes,
@@ -194,16 +194,21 @@ const commandToFunc: Record<string, CallableFunction> = {
     "soundlist" : _soundlist,
     "set_music" : _set_music,
     "load_hl2" : _load_hl2,
+    "connect" : _connect,
 }
 
 function submitCommand(command: string, args: string[]): void {
     let output: string[] = []
     console.log(`Command: ${command}, args: ${args}`)
-    if (functions.includes(command)) {
-        console.log("Command found")
-        output = commandToFunc[command](args)
-    } else {
-        output = [`Unknown command: ${command}`, "false"]
+    for (const [key, _value] of Object.entries(commandToFunc)) { //Isn't that many to loop however for optimisation i can just save the commands to a list for easy lookup
+        console.log(key)
+        if (command == key) {
+            console.log("Command found")
+            output = commandToFunc[command](args)
+            break
+        } else {
+            output = [`Unknown command: ${command}`, "false"]
+        }
     }
     console.log("Command output: ", output)
     addOutputToConsole(command, args, output[0])
