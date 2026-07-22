@@ -20,6 +20,9 @@ let sv_cheats: boolean = false
 
 let validSoundPaths: string[] = []
 
+let pastCommands: string[] = []
+let pastCommandsIdx: number = -1 //Increment by 1 when first used so idx 0 in list
+
 //console commands use underscore like the valve naming convention
 function _add_gabes(args: string[]): string[] {
     if (!sv_cheats) return ["Can't use cheat command add_gabes in multiplayer, unless the server has sv_cheats set to 1.", "false"]
@@ -29,6 +32,59 @@ function _add_gabes(args: string[]): string[] {
     addClicks(gabesToAdd)
 
     return [`Added ${gabesToAdd} GabeNs`, "true"]
+}
+
+function _help(args: string[]): string[] {
+
+    if (args.length > 0) {
+        console.log("Do something")
+
+        return ["Something", "true"]
+    }
+    let returnString: string = "List of available commands: "
+    for (let [keys, _] of Object.entries(commandToFunc)) {
+        if (keys == "help") {
+            continue
+        }
+        returnString += "\n" + keys
+    }
+
+    return [returnString, "true"]
+}
+
+function _optimise(_args: string[]) {
+    app.style.backgroundImage = "url('images/gaben freeman-pixel.jpg')"
+    return ["Optimsed the website", "true"]
+}
+
+function _patch_notes(_args: string): string[] {
+    let stringBuilder: string = ""
+
+    const potentialPatchNotes = [
+        ["Fixed gaben freeman breaking free from the website", "Increased gaben freeman's crowbar size", "Adjusted gaben's glasses", "Increased the contrast of the HEV suit"],
+        ["Changed the source console colour from pink to red", "Removed the ability to type after seeing patch notes", "removed the help command", "removed args from the source console"],
+        ["Added extra bloat to the code so it looks more professional", "removed some functions that I didn't know what they did", "Added 42 helper functions with the help of AI", "rewrote the entire website code with AI"],
+        ["Patched the error that leaked my own machines IP", "Fixed the connect command blue screening win10 devices", "Patched creepy music playing when adding the arg 'reep' to play"],
+        ["Removed herobrine", "Added voicelines from John Krasinsky", "Removed Sheldon Cooper from the source code"]
+    ]
+
+    for (let e in potentialPatchNotes) {
+        const rng = Math.floor(Math.random() * (potentialPatchNotes[e].length))
+        stringBuilder += "\n > " + potentialPatchNotes[e][rng]
+    }
+
+    return[stringBuilder, "true"]
+}
+
+function _clear(_args: string[]): string[] {
+    consoleLogs.innerText = ""
+    return ["", "true"]
+}
+
+function _I_like_pain(args: string[]): string[] {
+    //implement pain
+
+    return ["pain granted", "true"]
 }
 
 function _connect(args: string[]): string[] {
@@ -195,11 +251,16 @@ const commandToFunc: Record<string, CallableFunction> = {
     "set_music" : _set_music,
     "load_hl2" : _load_hl2,
     "connect" : _connect,
+    "help" : _help,
+    "optimise" : _optimise,
+    "patch_notes" : _patch_notes,
+    "clear" : _clear,
 }
+
+let commands: string[] = []
 
 function submitCommand(command: string, args: string[]): void {
     let output: string[] = []
-    console.log(`Command: ${command}, args: ${args}`)
     for (const [key, _value] of Object.entries(commandToFunc)) { //Isn't that many to loop however for optimisation i can just save the commands to a list for easy lookup
         console.log(key)
         if (command == key) {
@@ -223,6 +284,8 @@ function addOutputToConsole(input: string, optArgs: string[], output: string): v
         const pTag = document.createElement("p")
         pTag.style.color = "#b9babc"
         pTag.innerText = "> " + inputString
+        pastCommands.splice(0, 0, inputString)
+        pastCommandsIdx = -1
         consoleLogs.appendChild(pTag)
     }
     if (output) {
@@ -253,13 +316,32 @@ document.addEventListener("keypress", (key) => {
     }
 })
 
-consoleInput.addEventListener("keypress", (e) => {
+consoleInput.addEventListener("keyup", (e) => {
     if (e.key == "Enter") {
         const args = consoleInput.value.split(" ")
         const cmd = args[0]
         args.shift()
         submitCommand(cmd, args)
         consoleInput.value = ""
+    }
+
+    if (e.key == "ArrowUp") {
+        if ((pastCommands.length - 1) <= pastCommandsIdx) return
+        pastCommandsIdx++
+        const currCommand = pastCommands[pastCommandsIdx]
+        consoleInput.value = currCommand
+    }
+
+    if (e.key == "ArrowDown") {
+        if (pastCommandsIdx <= 0) {
+            if (consoleInput.value.trim() == "") return
+            pastCommandsIdx = -1
+            consoleInput.value = ""
+            return
+        }
+        pastCommandsIdx--
+        const currCommand = pastCommands[pastCommandsIdx]
+        consoleInput.value = currCommand
     }
 })
 

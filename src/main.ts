@@ -7,7 +7,6 @@ const GabenMusic = document.getElementById("gaben-music") as HTMLAudioElement
 const GabenFullMusic = document.getElementById("gaben-music-full") as HTMLAudioElement
 const GabenSong = document.getElementById("gaben-song") as HTMLAudioElement
 const subtitles = document.getElementById("song-subtitles") as HTMLParagraphElement
-const app = document.getElementById("app") as HTMLDivElement
 const customMusic = new Audio("") as HTMLAudioElement
 
 //Timers for subtitles & other stuff related
@@ -130,12 +129,3 @@ setInterval(() => {
     doingSubtitles = true
   }
 }, 25);
-
-document.addEventListener("DOMContentLoaded", () => {
-  var bgRNG = Math.floor(Math.random()*10)+1
-  if (bgRNG > 5) {
-    app.style.backgroundImage = "url('images/gaben freeman.jpg')"
-  } else {
-    app.style.backgroundImage = "url('images/Lord_Gaben.webp')"
-  }
-})

@@ -30,6 +30,8 @@ This changes the music that plays when you load on the page to whatever you want
 
 there are commands but I am not going to tell you them so you have to find them yourself! (the fastest way to find a command is to just try source 1 console commands... or look around the source code)
 
+Well... I decided to be nice and I added a `help` command so that you can see a list of all available commands that you can run in the source console!
+
 ## Made with love by Bailey
 
 kai why ee
