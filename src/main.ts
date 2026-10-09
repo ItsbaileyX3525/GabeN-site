@@ -1,11 +1,13 @@
 //Imports from things like gabeClicker
 import "./gabenClicker"
 import "./sourceConsole"
+import "./priceList"
 
 //DOM references
 const GabenMusic = document.getElementById("gaben-music") as HTMLAudioElement
 const GabenFullMusic = document.getElementById("gaben-music-full") as HTMLAudioElement
 const GabenSong = document.getElementById("gaben-song") as HTMLAudioElement
+const BestSong = document.getElementById("best-song-in-the-world") as HTMLAudioElement
 const subtitles = document.getElementById("song-subtitles") as HTMLParagraphElement
 const customMusic = new Audio("") as HTMLAudioElement
 
@@ -60,13 +62,17 @@ document.addEventListener("click", () => {
     GabenMusic.volume = .4
     GabenSong.volume = .4
 
+    console.log("DEBUG: ", rng)
+
   if (GabenFullMusic.paused && GabenMusic.paused && GabenSong.paused) {
     if (rng >= 89 && rng < 97) {
       GabenFullMusic.play()
     } else if (rng < 89){
       GabenMusic.play()
-    } else if (rng >= 97) {
+    } else if (rng >= 97 && rng < 100) {
       GabenSong.play()
+    } else if (rng == 100) {
+      BestSong.play()
     }
   }
 })

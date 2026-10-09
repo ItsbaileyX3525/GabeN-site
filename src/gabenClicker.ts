@@ -4,6 +4,7 @@
 const app = document.getElementById("app") as HTMLDivElement
 const clicker = document.getElementById("click") as HTMLDivElement
 const gabenface = document.getElementById("gaben-face") as HTMLDivElement
+const gabenScore = document.getElementById("gabe-score") as HTMLDivElement
 
 //Vars for the game
 let gabeClicks: number = 0
@@ -15,6 +16,22 @@ const click3: HTMLAudioElement = new Audio("audio/clicks/thanks-and-have-fun-gab
 
 export function addClicks(amount: number) {
     gabeClicks += amount
+    gabenScore.innerText = "gaben score: " + gabeClicks
+    saveGame()
+}
+
+export function removeClicks(amount: number) { //Ohhhh im gabein it
+  gabeClicks -= amount
+  gabenScore.innerText = "gaben score: " + gabeClicks
+  saveGame()
+}
+
+export function getClicks(): number {
+  return gabeClicks
+}
+
+function saveGame() {
+  localStorage.setItem("gabenClicks", gabeClicks.toString())
 }
 
 clicker.addEventListener("click", () => {
@@ -43,10 +60,18 @@ clicker.addEventListener("click", () => {
   newFace.style.bottom = face_rngY + "px"
 
   gabeClicks++
+  gabenScore.innerText = "gaben score: " + gabeClicks
+  saveGame()
 
   console.log(gabeClicks)
 
   setTimeout(() => {
     newFace.remove()
   }, 700);
+})
+
+document.addEventListener("DOMContentLoaded", () => {
+  let savedScore: number = parseInt((localStorage.getItem("gabenClicks") ?? "0"), 10)
+  gabeClicks = savedScore
+  gabenScore.innerText = "gaben score: " + gabeClicks
 })

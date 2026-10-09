@@ -1,4 +1,5 @@
-import { addClicks } from "./gabenClicker"
+import { addClicks, removeClicks, getClicks } from "./gabenClicker"
+import { getPrice, purchase, checkOwnership } from "./priceList"
 
 const srcConsole = document.getElementById("source-console") as HTMLDivElement
 const consoleInput = document.getElementById("console-input") as HTMLInputElement
@@ -27,11 +28,29 @@ let pastCommandsIdx: number = -1 //Increment by 1 when first used so idx 0 in li
 function _add_gabes(args: string[]): string[] {
     if (!sv_cheats) return ["Can't use cheat command add_gabes in multiplayer, unless the server has sv_cheats set to 1.", "false"]
 
-    let gabesToAdd = parseInt(args[0], 10)
+    let gabesToAdd: number = parseInt(args[0], 10)
 
     addClicks(gabesToAdd)
 
     return [`Added ${gabesToAdd} GabeNs`, "true"]
+}
+
+function _remove_gabes(args: string[]): string[] {
+    if (!sv_cheats) return ["Can't use cheat command remove_gabes in multiplayer, unless the server has sv_cheats set to 1.", "false"]
+
+    let gabesToRemove: number = parseInt(args[0], 10)
+
+    let gabesGot: number = getClicks()
+
+    let newScore: number = gabesGot - gabesToRemove
+
+    if (newScore < 0) {
+        gabesToRemove = gabesGot
+    }
+
+    removeClicks(gabesToRemove)
+
+    return [`Removed ${gabesToRemove} GabeNs`, "true"]
 }
 
 function _help(args: string[]): string[] {
@@ -217,7 +236,41 @@ function _mute_music(args: string[]): string[] {
     }
 }
 
+function _unlock(args: string[]): string[] { //Add checks to see if already unlocked
+    let itemToUnlock: string = args[0]
+
+    if (itemToUnlock.trim() == "" || args.length <= 0) {
+        return ["Please specify an item", "false"]
+    }
+
+    if (checkOwnership(itemToUnlock)) {
+        return ["Item already owned!", "false"]
+    }
+
+    console.log(itemToUnlock)
+    let priceOfItem = getPrice(itemToUnlock)
+    if (priceOfItem == undefined) {
+        return ["Item doesn't exist", "false"]
+    }
+
+    let clicks: number = getClicks()
+    if (clicks >= priceOfItem) {
+        removeClicks(priceOfItem)
+    } else {
+        let neededPrice: number = priceOfItem - clicks
+        return [`Not enough GabeNs to unlock! You need ${neededPrice} more!`, "false"]
+    }
+
+    purchase(itemToUnlock)
+
+    return ["Item purchased", "true"]
+}
+
 function _sv_cheats(args: string[]): string[] {
+    let hasUnlocked: boolean = JSON.parse(localStorage.getItem("sv_cheats_unlocked") ?? "false")
+    if (!hasUnlocked) {
+        return ["sv_cheats not unlocked, try 'unlock sv_cheats' and try again", "false"]
+    }
     if (!(["True", "true", "1", "False", "false", "0"].includes(args[0]))) {
         return ["Invalid arg", "false"]
     }
@@ -243,6 +296,7 @@ function _sv_cheats(args: string[]): string[] {
 const commandToFunc: Record<string, CallableFunction> = {
     "sv_cheats" : _sv_cheats,
     "add_gabes" : _add_gabes,
+    "remove_gabes" : _remove_gabes,
     "crowbar" : _crowbar,
     "mute_music" : _mute_music,
     "goon" : _goon,
@@ -255,9 +309,8 @@ const commandToFunc: Record<string, CallableFunction> = {
     "optimise" : _optimise,
     "patch_notes" : _patch_notes,
     "clear" : _clear,
+    "unlock" : _unlock,
 }
-
-let commands: string[] = []
 
 function submitCommand(command: string, args: string[]): void {
     let output: string[] = []
@@ -349,7 +402,6 @@ document.addEventListener("mousemove", (e) => {
     crowbarCursor.style.left = (e.clientX - 25) + "px"
     crowbarCursor.style.top = (e.clientY - 5) + "px"
 })
-
 document.addEventListener("mousedown", () => {
     if (crowbarCursor.classList.contains("absolute")) {
         let newAudio: HTMLAudioElement = new Audio(crowbarHit.src)
