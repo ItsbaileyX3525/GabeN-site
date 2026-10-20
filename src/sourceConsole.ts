@@ -1,5 +1,6 @@
 import { addClicks, removeClicks, getClicks } from "./gabenClicker"
-import { getPrice, purchase, checkOwnership } from "./priceList"
+import { getPrice, purchase, checkOwnership, getHelpDesc } from "./priceList"
+import { muteMusic } from "./music"
 
 const srcConsole = document.getElementById("source-console") as HTMLDivElement
 const consoleInput = document.getElementById("console-input") as HTMLInputElement
@@ -12,6 +13,7 @@ const hl2 = document.getElementById("literally-hl2") as HTMLIFrameElement
 const GabenMusic = document.getElementById("gaben-music") as HTMLAudioElement
 const GabenFullMusic = document.getElementById("gaben-music-full") as HTMLAudioElement
 const GabenSong = document.getElementById("gaben-song") as HTMLAudioElement
+const BestSong = document.getElementById("best-song-in-the-world") as HTMLAudioElement
 
 const barneyDroppedThis = new Audio("audio/voicelines/dropped-blackmesa2.mp3")
 const crowbarHit: HTMLAudioElement = new Audio("audio/clicks/half-life-crowbar.mp3")
@@ -23,6 +25,13 @@ let validSoundPaths: string[] = []
 
 let pastCommands: string[] = []
 let pastCommandsIdx: number = -1 //Increment by 1 when first used so idx 0 in list
+
+function pause_music() {
+  GabenFullMusic.pause()
+  GabenMusic.pause()
+  GabenSong.pause()
+  BestSong.pause()
+}
 
 //console commands use underscore like the valve naming convention
 function _add_gabes(args: string[]): string[] {
@@ -57,8 +66,8 @@ function _help(args: string[]): string[] {
 
     if (args.length > 0) {
         console.log("Do something")
-
-        return ["Something", "true"]
+        const desc = getHelpDesc(args[0])
+        return [desc, "true"]
     }
     let returnString: string = "List of available commands: "
     for (let [keys, _] of Object.entries(commandToFunc)) {
@@ -124,9 +133,7 @@ function _goon(_args: string[]): string[] {
     videoTag.src = "images/rise and shine mr freeman.mp4"
     videoTag.classList.add("absolute", "h-screen", "w-screen")
     localStorage.setItem("musicMuted", "true")
-    GabenFullMusic.pause()
-    GabenMusic.pause()
-    GabenSong.pause()
+    pause_music()
     //Tailwind doesn't eval at runtime obvs so because these aren't added to the bundle, we have to manually style these 2
     videoTag.style.objectFit = "fill"
     videoTag.style.zIndex = "100"
@@ -141,13 +148,21 @@ function _goon(_args: string[]): string[] {
     return ["Gooned", "true"]
 }
 
-function _soundlist(_args: string[]): string[] {
-    fetch("audio/hlSounds/map.json")
+function _soundlist(args: string[]): string[] {
+    const displayType: string = args[0] || ""
+    fetch("audio/sounds/map.json")
         .then(response => response.json())
         .then(data => {
             console.log(data)
-            for (const [key, value] of Object.entries(data)) {
-                console.log(key, value)
+            if (displayType === "") {
+                for (const [_key, value] of Object.entries(data)) {
+                    addOutputToConsole("", [], `${(value as { name?: string }).name ?? ""} at: ${(value as {path?: string}).path}`)
+                }                
+            }
+            for (const [_key, value] of Object.entries(data)) {
+                if ((value as {type?: string}).type !== displayType) {
+                    continue
+                }
                 addOutputToConsole("", [], `${(value as { name?: string }).name ?? ""} at: ${(value as {path?: string}).path}`)
             }
         })
@@ -163,16 +178,19 @@ function _crowbar(_args: string[]): string[] {
 }
 
 function _playsound(args: string[]): string[] {
-    let soundToPlay = args[0]
-    const vol = parseFloat(args[1]) || 1.0
+    let soundType = args[0]
+    let soundToPlay = args[1]
+    const vol = parseFloat(args[2]) || 1.0
 
-    if (!soundToPlay) return ["invalid args", "false"]
+    if (!soundToPlay) return ["invalid args, play [hl2/meme] [name]", "false"]
 
     if (!soundToPlay.endsWith(".mp3")) {
         soundToPlay += ".mp3"
     }
 
-    const src = "audio/hlSounds/" + soundToPlay
+    const src = "audio/sounds/" + soundType + "/" + soundToPlay
+
+    console.log(src)
 
     if (!validSoundPaths.includes(src)) return ["Sound not found", "false"]
 
@@ -209,6 +227,74 @@ function _set_music(args: string[]): string[] {
     return ["Set custom music", "true"]
 }
 
+function _stop_time(args: string[]): string[] {
+    const duration: number = (parseFloat(args[0]) * 1000) || 4000.0
+
+    console.log(duration)
+
+    const wasMusicMuted: string = localStorage.getItem("musicMuted") || "false"
+
+    localStorage.setItem("musicMuted", "true")
+
+    pause_music()
+
+    const timeStopGif = document.createElement("img")
+    timeStopGif.classList.add("fixed", "inset-0", "h-screen", "w-screen", "z-[100]")
+    timeStopGif.style.objectFit = "fill"
+    timeStopGif.src = "images/timestop.gif"
+    document.body.appendChild(timeStopGif)
+    const zaWarudo = new Audio("audio/sounds/meme/zaWarudo.mp3")
+    const resumeTime = new Audio("audio/sounds/meme/resumeTime.mp3")
+    const tick1 = new Audio("audio/sounds/meme/tick1.mp3")
+    const tick2 = new Audio("audio/sounds/meme/tick2.mp3")
+    const gabenFreeman: HTMLElement = document.getElementById("app") as HTMLDivElement
+    resumeTime.volume = .4
+    zaWarudo.volume = .4
+    zaWarudo.play()
+
+    let onTick: number = 0
+
+    let tickIntv: number
+
+    setTimeout(() => {
+      tickIntv = setInterval(() => {
+        if (onTick === 0) {
+          tick1.play()
+          onTick = 1
+        } else {
+          tick2.play()
+          onTick = 0
+        }
+      }, 1000);
+    }, 1000);
+
+    setTimeout(() => {
+        gabenFreeman.style.backgroundImage = "url('images/gaben freeman grayscale.png')"
+    }, 700);
+
+    setTimeout(() => {
+        timeStopGif.remove()
+    }, 3200);
+
+    setTimeout(() => {
+        resumeTime.play()
+        console.log("resumed time")
+        clearInterval(tickIntv)
+        gabenFreeman.style.backgroundImage = "url('images/gaben freeman.jpg')"
+        zaWarudo.removeAttribute("src") //hopefull gc removes it?
+        tick1.removeAttribute("src")
+        tick2.removeAttribute("src")
+        zaWarudo.load()
+        tick1.load()
+        tick2.load()
+        if (!wasMusicMuted) {
+          localStorage.setItem("musicMuted", "false")
+        }
+    }, duration + 1000);
+
+    return ["stopped time", "true"]
+}
+
 function _mute_music(args: string[]): string[] {
     if (!(["True", "true", "1", "False", "false", "0"].includes(args[0]))) {
         return ["Invalid arg", "false"]
@@ -225,10 +311,7 @@ function _mute_music(args: string[]): string[] {
     }
 
     if (value) {
-        localStorage.setItem("musicMuted", "true")
-        GabenFullMusic.pause()
-        GabenMusic.pause()
-        GabenSong.pause()
+        muteMusic()
         return ["Muted", "true"]
     } else {
         localStorage.setItem("musicMuted", "false")
@@ -307,23 +390,15 @@ const commandToFunc: Record<string, CallableFunction> = {
     "connect" : _connect,
     "help" : _help,
     "optimise" : _optimise,
+    "stop_time" : _stop_time,
     "patch_notes" : _patch_notes,
     "clear" : _clear,
     "unlock" : _unlock,
 }
 
 function submitCommand(command: string, args: string[]): void {
-    let output: string[] = []
-    for (const [key, _value] of Object.entries(commandToFunc)) { //Isn't that many to loop however for optimisation i can just save the commands to a list for easy lookup
-        console.log(key)
-        if (command == key) {
-            console.log("Command found")
-            output = commandToFunc[command](args)
-            break
-        } else {
-            output = [`Unknown command: ${command}`, "false"]
-        }
-    }
+    const func = commandToFunc[command];
+    const output = func ? func(args) : [`Unknown command: ${command}`, "false"];
     console.log("Command output: ", output)
     addOutputToConsole(command, args, output[0])
 }
@@ -347,6 +422,8 @@ function addOutputToConsole(input: string, optArgs: string[], output: string): v
         pTag.innerText = output
         consoleLogs.appendChild(pTag)
     }
+
+    consoleLogs.scrollTo(0, consoleLogs.scrollHeight)
 }
 
 document.addEventListener("keypress", (key) => {
@@ -408,7 +485,7 @@ document.addEventListener("mousedown", () => {
         newAudio.play()
         setTimeout(() => {
             newAudio.remove()
-        }, newAudio.duration * 100);
+        }, newAudio.duration * 1000);
     }
 
     crowbarCursor.style.transform =`rotate(-40deg)`
@@ -424,12 +501,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     path: string;
     }
 
-    const response = await fetch("audio/hlSounds/map.json");
+    const response = await fetch("audio/sounds/map.json");
     const data: SoundItem[] = await response.json(); // Type the parsed JSON directly
 
     data.forEach((element) => {
         validSoundPaths.push(element.path)
     });
-
     
 })

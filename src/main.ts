@@ -25,6 +25,7 @@ let doingSubtitles: boolean = false
 
 let subtitleInterval1: number | undefined
 let subtitleInterval2: number | undefined
+let music_rng: number = NaN
 
 let subtitleText = [
   "G", "A", "B", "E",
@@ -33,12 +34,6 @@ let subtitleText = [
 
 //Other vars
 let customMusicPlaying: boolean = false
-
-export function muteMusic() {
-    GabenFullMusic.pause()
-    GabenMusic.pause()
-    GabenSong.pause()
-}
 
 document.addEventListener("click", () => {
   if ((localStorage.getItem("musicMuted") || "false") === "true") return
@@ -54,24 +49,28 @@ document.addEventListener("click", () => {
     return
   }
 
-  if (!(GabenFullMusic && GabenMusic && GabenSong)) return
+  if (!(GabenFullMusic && GabenMusic && GabenSong && BestSong)) return
 
-  const rng: number = Math.floor(Math.random() * 100) + 1
 
-    GabenFullMusic.volume = .4
-    GabenMusic.volume = .4
-    GabenSong.volume = .4
+  if (isNaN(music_rng)) {
+    music_rng = Math.floor(Math.random() * 100) + 1
+  }
 
-    console.log("DEBUG: ", rng)
+  GabenFullMusic.volume = .4
+  GabenMusic.volume = .4
+  GabenSong.volume = .4
+  BestSong.volume = .4
 
-  if (GabenFullMusic.paused && GabenMusic.paused && GabenSong.paused) {
-    if (rng >= 89 && rng < 97) {
+  console.log("DEBUG: ", music_rng)
+
+  if (GabenFullMusic.paused && GabenMusic.paused && GabenSong.paused && BestSong.paused) {
+    if (music_rng >= 89 && music_rng < 97) {
       GabenFullMusic.play()
-    } else if (rng < 89){
+    } else if (music_rng < 89){
       GabenMusic.play()
-    } else if (rng >= 97 && rng < 100) {
+    } else if (music_rng >= 97 && music_rng < 100) {
       GabenSong.play()
-    } else if (rng == 100) {
+    } else if (music_rng == 100) {
       BestSong.play()
     }
   }

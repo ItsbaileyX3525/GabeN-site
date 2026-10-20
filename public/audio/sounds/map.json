@@ -1,0 +1,117 @@
+[
+    {
+        "name": "accessDenied.mp3",
+        "path": "audio/sounds/hl2/accessDenied.mp3",
+        "type": "hl2"
+    },
+    {
+        "name": "ah.mp3",
+        "path": "audio/sounds/hl2/ah.mp3",
+        "type": "hl2"
+    },
+    {
+        "name": "button.mp3",
+        "path": "audio/sounds/hl2/button.mp3",
+        "type": "hl2"
+    },
+    {
+        "name": "can.mp3",
+        "path": "audio/sounds/hl2/can.mp3",
+        "type": "hl2"
+    },
+    {
+        "name": "death.mp3",
+        "path": "audio/sounds/hl2/death.mp3",
+        "type": "hl2"
+    },
+    {
+        "name": "donuts.mp3",
+        "path": "audio/sounds/hl2/donuts.mp3",
+        "type": "hl2"
+    },
+    {
+        "name": "dropped.mp3",
+        "path": "audio/sounds/hl2/dropped.mp3",
+        "type": "hl2"
+    },
+    {
+        "name": "greetings.mp3",
+        "path": "audio/sounds/hl2/greetings.mp3",
+        "type": "hl2"
+    },
+    {
+        "name": "healthCharge.mp3",
+        "path": "audio/sounds/hl2/healthCharge.mp3",
+        "type": "hl2"
+    },
+    {
+        "name": "medkitBeat.mp3",
+        "path": "audio/sounds/hl2/medkitBeat.mp3",
+        "type": "hl2"
+    },
+    {
+        "name": "ohMy.mp3",
+        "path": "audio/sounds/hl2/ohMy.mp3",
+        "type": "hl2"
+    },
+    {
+        "name": "RiseAndShine.mp3",
+        "path": "audio/sounds/hl2/RiseAndShine.mp3",
+        "type": "hl2"
+    },
+    {
+        "name": "wah.mp3",
+        "path": "audio/sounds/hl2/wah.mp3",
+        "type": "hl2"
+    },
+    {
+        "name": "discordNotif.mp3",
+        "path": "audio/sounds/meme/discordNotif.mp3",
+        "type": "meme"
+    },
+    {
+        "name": "doit.mp3",
+        "path": "audio/sounds/meme/doit.mp3",
+        "type": "meme"
+    },
+    {
+        "name": "homerLets.mp3",
+        "path": "audio/sounds/meme/homerLets.mp3",
+        "type": "meme"
+    },
+    {
+        "name": "resumeTime.mp3",
+        "path": "audio/sounds/meme/resumeTime.mp3",
+        "type": "meme"
+    },
+    {
+        "name": "starPlatinum.mp3",
+        "path": "audio/sounds/meme/starPlatinum.mp3",
+        "type": "meme"
+    },
+    {
+        "name": "tick1.mp3",
+        "path": "audio/sounds/meme/tick1.mp3",
+        "type": "meme"
+    },
+    {
+        "name": "tick2.mp3",
+        "path": "audio/sounds/meme/tick2.mp3",
+        "type": "meme"
+    },
+    {
+        "name": "verity.mp3",
+        "path": "audio/sounds/meme/verity.mp3",
+        "type": "meme"
+    },
+    {
+        "name": "yeaBoiii.mp3",
+        "path": "audio/sounds/meme/yeaBoiii.mp3",
+        "type": "meme"
+    },
+    {
+        "name": "zaWarudo.mp3",
+        "path": "audio/sounds/meme/zaWarudo.mp3",
+        "type": "meme"
+    }
+]
